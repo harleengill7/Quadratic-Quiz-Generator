@@ -1,0 +1,241 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+//api
+void get_real_roots(int *x, int *y, int *b, int *c, int *d);
+void get_repeated_roots(int *x,int *b, int *c, int *d);
+void get_complex_roots(int *xr, int *xi, int *b, int *c, int *d);
+int find_discriminant(int a, int b, int c);
+void test_determinant(int *a, int *b, int *c, int *d, int *root1, int *root2);
+
+//function definitions
+void get_real_roots(int *x, int *y, int *b, int *c, int *d)
+{
+     while(*x == 0)
+    {
+       *x = -5 + rand() % 11;
+    }
+    *y = *x;
+    while(*y == *x)
+    {
+       *y = -5 + rand() % 11;
+    }
+    *b = (*x + *y);
+    *c = *x * *y;
+
+    *d = pow(*b,2) - 4 * *c;
+}
+
+void get_repeated_roots(int *x,int *b, int *c, int *d)
+{
+
+   while(*x == 0)
+    {
+       *x = -5 + rand() % 11;
+    }
+
+    *b = (2 * *x);
+    *c = *x * *x;
+
+
+    *d = pow(*b,2) - 4 * *c;
+}
+
+
+void get_complex_roots(int *xr, int *xi, int *b, int *c, int *d)
+{
+    while(*xr == 10)
+    {
+       *xr = -5 + rand() % 11;
+    }
+    while(*xi == 0)
+    {
+      *xi = -5 + rand() % 11;
+    }
+
+    *b = -2 * *xr;
+    *c = pow(*xr, 2) + pow(*xi, 2);
+
+    *d = pow(*b,2) - 4 * *c;
+
+}
+int find_discriminant(int a, int b, int c)
+{
+        int d = (b*b) - (4*a*c);
+        /*printf("\na: %d", a);
+        printf("\nb: %d", b);
+        printf("\nc: %d", c);*/
+        return(d);
+}
+void test_determinant(int *a, int *b, int *c, int *d, int *root1, int *root2)
+{
+    if(d > 0)
+    {
+       *root1 = ((-(*b) + sqrt(pow(*b,2) - 4* *c)) / (2));
+       *root2 = ((-(*b) - sqrt(pow(*b,2) - 4* *c)) / (2));
+       //printf("\nroot 1: %d", root1);
+       //printf("\nroot 2: %d", root2);
+    }
+    if(d == 0)
+    {
+        *root1 = -*b/ (2* *a);
+        *root2 = -*b/(2* *a);
+        //printf("\nroot 1: %d", root1);
+        //printf("\nroot 2: %d", root2);
+    }
+    if(d < 0)
+    {
+        *root1 = -*b/(2* *a);
+        *root2 = sqrt(*d)/ (2* *a);
+        //printf("\nroot 1: %d + i%d", root1, root2);
+        //printf("\nroot 2: %d - i%d", root1, root2);
+
+    }
+}
+
+
+int main()
+{
+
+    srand(time(NULL));
+
+    int x11 = 0;
+    int x21 = 0;
+    int b1, b2, b3;
+    int c1, c2, c3;
+    int x12 = 0;
+    int x22;
+    int x13 = 10;
+    int x23 = 10;
+    int i1, i2;
+    int a = 1;
+    int xi1 = 0;
+    int d1, d2, d3;
+
+
+    //quadratic equation
+    get_repeated_roots(&x11,&b1, &c1, &d1);
+    printf("\nRepeated roots: %d, %d", x11,x11);
+    printf("\nx^2 + %dx + %d\n",b1, c1);
+
+    get_real_roots(&x12, &x22, &b2, &c2, &d2);
+    printf("\nReal roots: %d, %d", x12,x22);
+    printf("\nx^2 + %dx + %d\n",b2, c2);
+
+    get_complex_roots(&x13, &xi1, &b3, &c3, &d3);
+    printf("\nComplex roots: %d, %d", x13, xi1);
+    printf("\nx^2 + %dx + %d", b3, c3);
+
+    //solving for discrimnate
+    d1 = find_discriminant(a, b1,c1);
+    d2 = find_discriminant(a, b2,c2);
+    d3 = find_discriminant(a, b3,c3);
+    printf("\nd1: %d", d1);
+    printf("\nd2: %d", d2);
+    printf("\nd3: %d", d3);
+
+
+
+
+    FILE *fp;
+
+    fp = fopen("/Users/harleengill/Documents/370/c-programs/over.txt", "w");
+
+    fprintf(fp,"\\documentclass{exam}\n");
+    fprintf(fp,"\\usepackage[utf8]{inputenc}\n");
+
+    fprintf(fp,"\\begin{document}\n");
+
+    fprintf(fp,"\\section*{ECE 370: Advanced Computing in ECE}\n");
+    fprintf(fp,"\\subsection*{Quiz \\#1: The Quadratic Equation}\n");
+    fprintf(fp,"\\today\n");
+
+    fprintf(fp,"\\vspace{10mm}\n");
+    fprintf(fp,"\\makebox[\\textwidth]{Name:\\enspace\\hrulefill}\n");
+    fprintf(fp,"\\vspace{3mm}\n\n");
+
+    fprintf(fp,"\\begin{questions}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots: \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b1, c1);
+
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots:  \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b2, c2);
+
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots:  \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b3, c3);
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\end{questions}\n\n");
+
+    fprintf(fp,"\\newpage\n\n");
+
+
+
+
+    //write to file for the questions and write to another file .tex for the answer sheet
+    fprintf(fp,"\\section*{ECE 370: Advanced Computing in ECE}\n");
+    fprintf(fp,"\\subsection*{Quiz \\#1 Answer Key: The Quadratic Equation}\n");
+    fprintf(fp,"\\today\n");
+    fprintf(fp,"\\vspace{10mm}\n");
+    fprintf(fp,"\\makebox[\\textwidth]{Name:\\enspace\\hrulefill}\n");
+    fprintf(fp,"\\vspace{3mm}\n\n");
+
+    fprintf(fp,"\\begin{questions}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots: \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b1, c1);
+    fprintf(fp,"\\begin{itemize}");
+        fprintf(fp,"\\item Discriminate: %d\n", d1);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"d = %d^2 - (4 * %d) = %d - (%d) = %d\n", b1, c1, b1 * b1, 4 * c1, d1);
+    fprintf(fp,"\n\n");
+
+    fprintf(fp,"\\begin{itemize}");
+        fprintf(fp,"\\item Roots: %d, %d\n", x11, x11);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"\\(x1 = \\[\\frac{-(%d)}{2}\\] = %d \\)\n", b1, b1/2);
+    fprintf(fp,"\\\\\\\\\n\n");
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots:  \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b2, c2);
+    fprintf(fp,"\\begin{itemize}\n");
+        fprintf(fp,"\\item Discriminate: %d\n", d2);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"d = %d^2 - (4 * %d) = %d - (%d) = %d\n", b2, c2, b2 * b2, 4 * c2, d2);
+    fprintf(fp,"\n\n");
+
+    fprintf(fp,"\\begin{itemize}\n");
+        fprintf(fp,"\\item Roots: %d, %d\n", x12, x22);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"\\(x1 = \\[\\frac{-(%d) + \\sqrt{%d^2 - (4 * (%d))}}{2}\\] = \\[\\frac{%.2f}{2}\\] = %.2f \\)\n", b2, b2, c2, (-1 * b2) + sqrt((float)(b2 * b2) - (4 * c2)), (float)((-1 * b2) + sqrt((float)(b2 * b2) - (4 * c2)))/2);
+    fprintf(fp,"\\\\\\\\\n");
+
+    fprintf(fp,"\\\\\\\\\n");
+    fprintf(fp,"\\(x2 = \\[\\frac{-(%d) - \\sqrt{%d^2 - (4 * %d)}}{2}\\] = \\[\\frac{%.2f}{2}\\] = %.2f \\)\n", b2, b2, c2, (-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)), (float)((-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)))/2);
+    fprintf(fp,"\\\\\\\\\n\n");
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\question Solve for the roots:  \\(x^2 + (%dx) + (%d) = 0\\)\n\n", b3, c3);
+    fprintf(fp,"\\begin{itemize}\n");
+        fprintf(fp,"\\item Discriminate: %d\n", d3);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"d = %d^2 - (4 * %d) = %d - (%d) = %d\n", b3, c3, b3 * b3, 4 * c3, d3);
+    fprintf(fp,"\n\n");
+    fprintf(fp,"\n\\begin{itemize}\n");
+        fprintf(fp,"\\item Roots:%d, %d\n", x13, xi1);
+    fprintf(fp,"\\end{itemize}\n\n");
+    fprintf(fp,"\\(x1 = \\[\\frac{-(%d)}{2}\\] + i * \\[\\frac{-(%d)\\] + \\sqrt{%d^2 - (4 * %d)}}{2}\\] = %d + i * \\[\\frac{%.2f}{2}\\] = %d + %.2fi\\)\n\n", b3, b3, b3, c3, b1/2, (-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)), b1/2, (float)((-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)))/2);
+    fprintf(fp,"\\(x2 = \\[\\frac{-(%d)}{2}\\] - i * \\[\\frac{-(%d)\\] + \\sqrt{%d^2 - (4 * %d)}}{2}\\] = %d - i * \\[\\frac{%.2f}{2}\\] = %d - %.2fi\\)\n", b3, b3, b3, c3, b1/2, (-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)), b1/2, (float)((-1 * b2) - sqrt((float)(b2 * b2) - (4 * c2)))/2);
+    fprintf(fp,"\\vspace{\\stretch{1}}\n\n");
+
+    fprintf(fp,"\\end{questions}\n\n");
+
+    fprintf(fp,"\\end{document}\n");
+
+    fclose(fp);
+
+
+}
